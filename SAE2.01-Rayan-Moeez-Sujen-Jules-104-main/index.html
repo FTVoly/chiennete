@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeu de Memory - SAÉ 2.01</title>
+  
+  <!-- Feuille de style principale -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Point d'entrée JavaScript (type module pour autoriser les imports) -->
+  <script src="js/app.js" type="module"></script>
+</head>
+<body>
+<header>
+  <h1>Jeu de Memory</h1>
+</header>
+
+<!-- ========================================== -->
+<!-- 1. PANNEAU DE DÉMARRAGE (FORMULAIRE)       -->
+<!-- ========================================== -->
+<div class="setup-form" id="panneauFormulaire">
+  <h2>Démarrer une nouvelle partie</h2>
+  
+  <form class="game-form" id="formulaireJeu">
+    
+    <!-- Choix du pseudo -->
+    <label for="nomJoueur">Nom du joueur</label>
+    <input type="text" id="nomJoueur" required placeholder="Ex: FanDeLaKC">
+
+    <!-- Choix du mode de jeu (Normal = fun, Classé = Elo) -->
+    <label for="modeJeu">Mode de jeu</label>
+    <select id="modeJeu" required>
+      <option value="normal">Normal</option>
+      <option value="classe">Classé</option>
+    </select>
+
+    <!-- Choix de la difficulté -->
+    <label for="difficulte">Niveau de difficulté</label>
+    <select id="difficulte" required>
+      <option value="easy">Facile (4 paires)</option>
+      <option value="medium">Moyen (6 paires)</option>
+      <option value="hard">Difficile (8 paires)</option>
+    </select>
+
+    <!-- Choix de la collection d'images -->
+    <label for="collectionImages">Collection d'images</label>
+    <select id="collectionImages" required>
+      <option value="LEC">LEC</option>
+      <option value="LFL">LFL</option>
+      <option value="VCT">VCT</option>
+      <option value="personnalisee">Personnalisée (Vos images)</option>
+    </select>
+
+    <!-- Zone cachée par défaut : s'affiche uniquement si "Personnalisée" est sélectionné -->
+    <div id="zoneUploadImages" class="hidden" style="margin-top: 0.5rem; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.375rem;">
+      <label for="uploadImages" style="margin-bottom: 0.5rem; color: var(--color-timer);">Sélectionnez vos images :</label>
+      <input type="file" id="uploadImages" multiple accept="image/*" style="border: none; padding: 0; background: transparent; box-shadow: none;">
+      <small style="color: var(--color-text-label); display: block; margin-top: 0.5rem;">(Veuillez sélectionner au moins 4, 6 ou 8 images selon la difficulté)</small>
+    </div>
+
+    <!-- Bouton de validation du formulaire -->
+    <button type="submit" id="boutonSoumettre">Démarrer la partie</button>
+  </form>
+</div>
+
+<!-- ========================================== -->
+<!-- 2. PANNEAU DE JEU (PLATEAU ET HUD)         -->
+<!-- ========================================== -->
+<div class="game-area hidden" id="zoneJeu">
+  <div class="game-area-header">
+    <!-- Statistiques en temps réel -->
+    <div class="game-timer" id="affichageChrono">00:00</div>
+    <div>Mouvements : <strong id="affichageMouvements" style="color: var(--color-text-white); font-size: 1.2rem;">0</strong></div>
+    <div>Paires : <strong id="compteurPaires" style="color: var(--color-timer); font-size: 1.2rem;">0</strong></div>
+    
+    <!-- Boutons d'actions en cours de partie -->
+    <div>
+      <button id="boutonIndice" style="padding: 0.5rem 1rem; background-color: #eab308; color: #000; font-weight: bold; border: none; border-radius: 0.375rem; cursor: pointer; margin-right: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">Indice (+15s)</button>
+      <button id="abandon">Abandonner</button>
+    </div>
+  </div>
+  
+  <!-- Conteneur où les cartes seront générées dynamiquement en JS -->
+  <div class="game-board"></div>
+</div>
+
+<!-- ========================================== -->
+<!-- 3. PANNEAU DU CLASSEMENT (FIN DE PARTIE)   -->
+<!-- ========================================== -->
+<div class="setup-form hidden" id="panneauClassement" style="max-width: 64rem;">
+  <h2 style="text-align: center; color: gold;">🏆 Classement Classé (<span id="etiquetteDifficulte"></span>)</h2>
+  
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left;">
+      <thead>
+        <tr>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Rang</th>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Pseudo</th>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Palier</th>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Elo</th>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Temps</th>
+          <th style="padding: 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Mouvements</th>
+        </tr>
+      </thead>
+      <!-- Le corps du tableau est rempli par le fichier app.js -->
+      <tbody id="corpsClassement"></tbody>
+    </table>
+  </div>
+  
+  <button id="boutonRejouer" style="margin-top: 1.5rem; width: 100%; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; background-color: var(--color-btn-primary); color: var(--color-text-white); font-weight: bold;">Rejouer</button>
+</div>
+
+</body>
+</html>
